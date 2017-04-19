@@ -10,13 +10,15 @@
 #include <ctime>     //to randomize ship locations
 #include <string>
 #include <iomanip>
+#include <fstream>
+#include <cstdlib>
 using namespace std; //Name-space under which system libraries exist
 
 //User Libraries
 
 //Constants
-const int row = 4;   
-const int column = 4;
+const int row = 7;   
+const int column = 7;
 int board[row][column];
 
 //Function Prototypes
@@ -28,7 +30,10 @@ bool guess(int x, int y);
 //Execution begins here
 int main(int argc, char** argv) {
     //Declare variables   
-    int maxShip = 1, shpCtr = 1;    //Max ship/Ship counter
+    ofstream out;
+
+    
+    int maxShip = 10, shpCtr = 10;    //Max ship/Ship counter
     int shpDown = 0;
     int num1, num2;
     int counter = 0, hits = 0, misses = 0, guesses = 0;
@@ -36,7 +41,8 @@ int main(int argc, char** argv) {
     char ans, stop, funny, plyAgn;
     string name;
     float perHit, perMiss;
-    
+    char outName[]="GameStats.dat";
+      
     cout << fixed << setprecision(2);           //Decimals 2 places
     
     //Input data
@@ -51,7 +57,7 @@ int main(int argc, char** argv) {
     cin >> ans;
     
     do{
-
+    restart();
     myBoard();   
     while (shpDown < maxShip)           //Set the ship's location
     {
@@ -65,18 +71,16 @@ int main(int argc, char** argv) {
             board[x][y] = 1;       
         }
     }
-    
-    
-    
+    //Initiate loop
     while( ans == 'y' || 'Y')       //Play again or not
     {                   
-    cout << "Please enter two numbers [0-7] to guess location "
+    cout << "Please enter two numbers [0-6] to guess location "
          << "of ships" << endl;
-    cin >> num1;            //[0-7] # rows downward
-    cin >> num2;            //[0-7] # column to the right
+    cin >> num1;            //[0-6] # rows downward
+    cin >> num2;            //[0-6] # column to the right
     
     
-    
+        //If statement for hits
         if( guess(num1, num2))
         {
             cout << "Hit!" << endl;
@@ -86,6 +90,7 @@ int main(int argc, char** argv) {
             cout << "number of ships left " << shpCtr << endl;
             
         }
+        //If-statement for misses
         else 
         {       
             cout << "Miss! Try again!" << endl; 
@@ -99,6 +104,7 @@ int main(int argc, char** argv) {
                 break;
             }
         }
+    //Gameover counter
     if ( shpCtr == 0)
     {
         cout<< endl << "you've won! game ending" << endl;
@@ -109,6 +115,7 @@ int main(int argc, char** argv) {
     cout << "----------------------------------------" << endl;
     myBoard();              //Show board
     
+    //Output stats
     cout << endl << "number of guesses: " << guesses << endl;
     cout << "number of hits: " << hits << endl;
     cout << "number of misses: " << misses << endl;
@@ -127,7 +134,7 @@ int main(int argc, char** argv) {
     cin >> plyAgn;
     } 
     while (plyAgn == 'y');
-    
+
     return 0;
 }
 
